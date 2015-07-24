@@ -1,0 +1,3 @@
+@interface RoundedImageView : UIImageView
+
+@end

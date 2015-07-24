@@ -1,0 +1,3 @@
+@interface DismissSegue : UIStoryboardSegue
+
+@end

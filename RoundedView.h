@@ -1,0 +1,3 @@
+@interface RoundedView : UIView
+
+@end
