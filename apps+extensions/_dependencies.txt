@@ -1,4 +1,4 @@
-Libraries dependencies
+Pods libraries dependencies
 
 AFNetworking
 JSONModel

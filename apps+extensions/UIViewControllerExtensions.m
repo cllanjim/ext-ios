@@ -2,14 +2,6 @@
 
 @implementation UIViewController (UIViewControllerExtensions)
 
-#ifndef EXT_APP_EXTENSIONS
-- (CGRect)viewFrameUnderNavigationBar
-{
-    CGRect viewFrame = CGRectMake(0, StatusBarPlusNavigationBarHeight, self.view.frame.size.width, self.view.frame.size.height - StatusBarPlusNavigationBarHeight);
-    return viewFrame;
-}
-#endif
-
 - (void)showAlertWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString
 {
     [self showAlertWithTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:NO withButtonCallback:nil withOptionalCancelString:nil withOptionalCancelCallback:nil];
