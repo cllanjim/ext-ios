@@ -1,6 +1,5 @@
 #import "NSUserDefaultsExtensions.h"
-
-#define SuiteNameForExtensions @"group.es.phram.phrames"
+#import "Constants.h"
 
 @implementation NSUserDefaults (NSUserDefaultsExtensions)
 
