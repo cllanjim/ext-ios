@@ -134,11 +134,18 @@
 
 #pragma mark - String manipulation
 
-- (NSDate *)timestampToDate
+- (NSDate *)timestampMillisecondsToDate
 {
     NSTimeInterval aTimestamp = self.doubleValue;
     return [NSDate dateWithTimeIntervalSince1970:aTimestamp / 1000];
 }
+
+- (NSDate *)timestampToDate
+{
+    NSTimeInterval aTimestamp = self.doubleValue;
+    return [NSDate dateWithTimeIntervalSince1970:aTimestamp];
+}
+
 
 - (NSURL *)getURL
 {

@@ -28,6 +28,8 @@
 
 - (long)longValue;
 
+- (NSDate *)timestampMillisecondsToDate;
+
 - (NSDate *)timestampToDate;
 
 - (NSURL *)getURL;
