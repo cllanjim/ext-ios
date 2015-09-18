@@ -59,7 +59,7 @@
 #define DocumentsPath           ((NSString*)[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0])
 #define CachesPath              ((NSString*)[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0])
 #define TempPath                NSTemporaryDirectory()
-#define Language                [[NSLocale.preferredLanguages objectAtIndex:0] substringWithRange:NSMakeRange(0, 1)]
+#define Language                [[NSLocale.preferredLanguages objectAtIndex:0] substringWithRange:NSMakeRange(0, 2)]
 
 #define Localize(string, ...)   [NSBundle.mainBundle localizedStringForKey:(string) value:@"" table:nil]
 #define Pause(seconds)          [NSThread sleepForTimeInterval:(seconds)]
