@@ -37,7 +37,10 @@
 #define CallBlockOnGlobalQueue(blockName, ...)  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{ CallBlock(blockName, __VA_ARGS__); });
 #define VoidBlock void(^)(void)
 
-#define SendNotification(notificationName)      dispatch_async(dispatch_get_main_queue(), ^{ [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:nil]; });
+#define SendNotificationWithInfo(notificationName, info) dispatch_async(dispatch_get_main_queue(), ^{ [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:self userInfo:info]; });
+#define SendNotification(notificationName) dispatch_async(dispatch_get_main_queue(), ^{ [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:self]; });
+#define RegisterNotification(notificationName, methodName) [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(methodName) name:notificationName object:nil];
+#define UnRegisterNotification(notificationName) [NSNotificationCenter.defaultCenter removeObserver:self name:notificationName object:nil];
 
 #define DisableInteraction                      [UIApplication.sharedApplication beginIgnoringInteractionEvents];
 #define EnableInteraction                       if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]){[UIApplication.sharedApplication endIgnoringInteractionEvents];}
