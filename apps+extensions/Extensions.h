@@ -1,5 +1,6 @@
 #import "NSStringExtensions.h"
 #import "NSDateExtensions.h"
+#import "NSUserDefaultsExtensions.h"
 #import "UIViewControllerExtensions.h"
 #import "UIViewExtensions.h"
 #import "UIImageViewExtensions.h"
