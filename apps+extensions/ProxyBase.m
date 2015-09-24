@@ -60,7 +60,12 @@
         }
         else
         {
-            [self doNetworkTaskRecursive:networkJob retryCount:retryNumber-1 withErrorCallback:onError withRetryHint:aRetryHint];
+            [Run onGlobalQueue:^
+             {
+                 int timeToWait = pow(_numberOfRetrials - retryNumber, 2); // Wait for 1^2=1, 2^2=4, 3^2=9, ... seconds each trial...
+                 Pause(timeToWait);
+                 [self doNetworkTaskRecursive:networkJob retryCount:retryNumber-1 withErrorCallback:onError withRetryHint:aRetryHint];
+             }];
         }
     };
     
