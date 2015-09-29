@@ -1,5 +1,4 @@
 #import "NSUserDefaultsExtensions.h"
-#import "Constants.h"
 
 @implementation NSUserDefaults (NSUserDefaultsExtensions)
 
@@ -9,7 +8,6 @@
     NSUserDefaults* defaults = [NSUserDefaults.alloc initWithSuiteName:aSuiteName];
     [defaults setObject:encodedObject forKey:key];
     [defaults synchronize];
-    
 }
 
 - (id)loadCustomObjectWithKey:(NSString *)key withSuiteName:(NSString *)aSuiteName
