@@ -1,5 +1,5 @@
 #import "Extensions.h"
-#import "SDWebImage+ExtensionSupport/UIImageView+WebCache.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation UIImageView (UIImageViewExtensions)
 
