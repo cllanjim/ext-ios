@@ -4,20 +4,20 @@
 
 - (void)showAlertWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString
 {
-    [self showAlertWithTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:NO withButtonCallback:nil withOptionalCancelString:nil withOptionalCancelCallback:nil];
+    [self showAlertWithTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:NO withSourceView:nil withButtonCallback:nil withOptionalCancelString:nil withOptionalCancelCallback:nil];
 }
 
 - (void)showAlertWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
 {
-    [self showAlertControllerWithStyle:UIAlertControllerStyleAlert withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
+    [self showAlertControllerWithStyle:UIAlertControllerStyleAlert withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withSourceView:nil withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
 }
 
-- (void)showActionSheetWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
+- (void)showActionSheetWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSourceView:(UIView *)aSourceView withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
 {
-    [self showAlertControllerWithStyle:UIAlertControllerStyleActionSheet withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
+    [self showAlertControllerWithStyle:UIAlertControllerStyleActionSheet withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withSourceView:aSourceView withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
 }
 
-- (void)showAlertControllerWithStyle:(UIAlertControllerStyle)controllerStyle withTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
+- (void)showAlertControllerWithStyle:(UIAlertControllerStyle)controllerStyle withTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSourceView:(UIView *)aSourceView withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
 {
     UIAlertController* alertController = [UIAlertController
                                           alertControllerWithTitle:aTitle
@@ -42,6 +42,8 @@
         [alertController addAction:cancelAction];
     }
     
+    alertController.popoverPresentationController.sourceView = aSourceView;
+    alertController.popoverPresentationController.sourceRect = aSourceView.bounds;
     [Run onMainQueue:^{
         [self presentViewController:alertController animated:YES completion:nil];
     }];
