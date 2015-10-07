@@ -27,4 +27,6 @@
 
 - (UIImage *)scaleToAspectFillSize:(CGSize)aSize;
 
+- (UIColor *)averageColor;
+
 @end

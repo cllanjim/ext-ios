@@ -4,7 +4,7 @@
 
 - (void)showAlertWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString
 {
-    [self showAlertWithTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:NO withSourceView:nil withButtonCallback:nil withOptionalCancelString:nil withOptionalCancelCallback:nil];
+    [self showAlertWithTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:NO withButtonCallback:nil withOptionalCancelString:nil withOptionalCancelCallback:nil];
 }
 
 - (void)showAlertWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
