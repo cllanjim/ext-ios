@@ -9,15 +9,15 @@
 
 - (void)showAlertWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
 {
-    [self showAlertControllerWithStyle:UIAlertControllerStyleAlert withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withSourceView:nil withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
+    [self showAlertControllerWithStyle:UIAlertControllerStyleAlert withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withSender:nil withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
 }
 
-- (void)showActionSheetWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSourceView:(UIView *)aSourceView withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
+- (void)showActionSheetWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSender:(id)aSender withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
 {
-    [self showAlertControllerWithStyle:UIAlertControllerStyleActionSheet withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withSourceView:aSourceView withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
+    [self showAlertControllerWithStyle:UIAlertControllerStyleActionSheet withTitle:aTitle withMessage:aMessage withButtonString:buttonString withDestructiveAction:isDestructiveAction withSender:aSender withButtonCallback:aConfirmCallback withOptionalCancelString:cancelString withOptionalCancelCallback:aCancelCallback];
 }
 
-- (void)showAlertControllerWithStyle:(UIAlertControllerStyle)controllerStyle withTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSourceView:(UIView *)aSourceView withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
+- (void)showAlertControllerWithStyle:(UIAlertControllerStyle)controllerStyle withTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSender:(id)aSender withButtonCallback:(VoidBlock)aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(VoidBlock)aCancelCallback
 {
     UIAlertController* alertController = [UIAlertController
                                           alertControllerWithTitle:aTitle
@@ -36,14 +36,32 @@
         UIAlertAction* cancelAction = [UIAlertAction
                                        actionWithTitle:cancelString
                                        style:UIAlertActionStyleCancel
-                                       handler:^(UIAlertAction *action) {
+                                       handler:^(UIAlertAction* action) {
                                            CallBlockOnMainQueue(aCancelCallback);
                                        }];
         [alertController addAction:cancelAction];
     }
     
-    alertController.popoverPresentationController.sourceView = aSourceView;
-    alertController.popoverPresentationController.sourceRect = aSourceView.bounds;
+    if (aSender)
+    {
+        if ([aSender isKindOfClass:UIView.class])
+        {
+            UIView* senderView = (UIView *)aSender;
+            alertController.popoverPresentationController.sourceView = senderView;
+            alertController.popoverPresentationController.sourceRect = senderView.bounds;
+        }
+        else if ([aSender isKindOfClass:UIBarButtonItem.class])
+        {
+            UIBarButtonItem* senderBarButtonItem = (UIBarButtonItem *)aSender;
+            alertController.popoverPresentationController.barButtonItem = senderBarButtonItem;
+        }
+        else
+        {
+            CLog(@"Unsupported sender for alert controller!");
+            return;
+        }
+    }
+    
     [Run onMainQueue:^{
         [self presentViewController:alertController animated:YES completion:nil];
     }];
