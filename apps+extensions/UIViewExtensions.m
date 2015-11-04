@@ -2,15 +2,18 @@
 
 @implementation UIView (UIViewExtensions)
 
-- (void)roundTheCorners
+- (void)roundTheCorners:(BOOL)shouldRasterize
 {
     CGColorRef backgroudColor = self.backgroundColor.CGColor;
     self.backgroundColor = UIColor.clearColor;
     self.layer.backgroundColor = backgroudColor;
     self.layer.cornerRadius = self.bounds.size.width / 2;
     self.layer.masksToBounds = YES;
-    self.superview.layer.shouldRasterize = YES;
-    self.superview.layer.rasterizationScale = UIScreen.mainScreen.scale;
+    if (shouldRasterize)
+    {
+        self.superview.layer.shouldRasterize = YES;
+        self.superview.layer.rasterizationScale = UIScreen.mainScreen.scale;
+    }
 }
 
 @end

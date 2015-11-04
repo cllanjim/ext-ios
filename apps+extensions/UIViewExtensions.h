@@ -1,5 +1,5 @@
 @interface UIView (UIViewExtensions)
 
-- (void)roundTheCorners;
+- (void)roundTheCorners:(BOOL)shouldRasterize;
 
 @end
