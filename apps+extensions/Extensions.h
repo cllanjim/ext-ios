@@ -22,10 +22,14 @@
 
 #define DeviceScreenRect        UIScreen.mainScreen.bounds
 #define DeviceScreenSize        UIScreen.mainScreen.bounds.size
+#define WindowRect         UIApplication.sharedApplication.delegate.window.bounds
+#define WindowSize         UIApplication.sharedApplication.delegate.window.bounds.size
 
-#define isIpad           (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-#define isIphone         (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-#define isIpad2          (isIpad && ((DeviceScreenSize.width == 768 && DeviceScreenSize.height == 1024) || (DeviceScreenSize.width == 1024 && DeviceScreenSize.height == 768)))
+#define isRunningInFullScreen (CGRectEqualToRect(WindowRect, DeviceScreenRect))
+
+#define isIpad (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define isIphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define isIpad2 (isIpad && ((DeviceScreenSize.width == 768 && DeviceScreenSize.height == 1024) || (DeviceScreenSize.width == 1024 && DeviceScreenSize.height == 768)))
 #define iPhone4_5_6_6p(value4,value5,value6,value6p) (DeviceScreenSize.height < 568 ? (value4) : (DeviceScreenSize.width < 375 ? (value5) : (DeviceScreenSize.width > 375 ? (value6p) : (value6))))
 #define iPhone_iPad(iPhoneValue,iPadValue) (isIpad ? (iPadValue) : (iPhoneValue))
 
