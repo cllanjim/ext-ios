@@ -14,10 +14,12 @@
     return self;
 }
 
-- (void)teardown
+- (void)teardown:(void (^)())onDone
 {
-    dispatch_async(_sessionQueue, ^{
+    dispatch_async(_sessionQueue, ^
+    {
         [_session stopRunning];
+        CallBlock(onDone);
     });
 }
 
@@ -53,7 +55,7 @@
 
 - (void)setFramesOrientation:(AVCaptureVideoOrientation)anOrientation
 {
-    AVCaptureConnection *captureConnection;
+    AVCaptureConnection* captureConnection;
     captureConnection = [_output connectionWithMediaType:AVMediaTypeVideo];
     if ([captureConnection isVideoOrientationSupported])
     {
@@ -104,8 +106,8 @@
                 break;
         }
         
-        AVCaptureDevice *videoDevice = [self deviceWithMediaType:_cameraDevicePosition];
-        AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
+        AVCaptureDevice* videoDevice = [self deviceWithMediaType:_cameraDevicePosition];
+        AVCaptureDeviceInput* videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
         
         [self.session beginConfiguration];
         
@@ -121,7 +123,7 @@
         {
             [self.session addInput:[self videoDeviceInput]];
         }
-        [self setFramesOrientation:AVCaptureVideoOrientationPortrait];
+        [self setFramesOrientation:AVCaptureVideoOrientationLandscapeRight];
         
         [self.session commitConfiguration];
         CallBlockOnMainQueue(aCallback, _videoDevice.hasTorch && [_videoDevice isTorchModeSupported:AVCaptureTorchModeOn]);
@@ -130,7 +132,7 @@
 
 - (AVCaptureDevice *)deviceWithMediaType:(AVCaptureDevicePosition)position
 {
-    AVCaptureDevice *captureDevice = [_devices firstObject];
+    AVCaptureDevice* captureDevice = [_devices firstObject];
     for (AVCaptureDevice *device in _devices)
     {
         if (device.position == position)

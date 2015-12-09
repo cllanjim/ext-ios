@@ -5,17 +5,23 @@
 
 + (Class)layerClass
 {
-	return [AVCaptureVideoPreviewLayer class];
+	return AVCaptureVideoPreviewLayer.class;
+}
+
+- (AVCaptureVideoPreviewLayer *)videoPreviewLayer
+{
+    return (AVCaptureVideoPreviewLayer *)self.layer;
 }
 
 - (AVCaptureSession *)session
 {
-	return [(AVCaptureVideoPreviewLayer *)[self layer] session];
+	return self.videoPreviewLayer.session;
 }
 
 - (void)setSession:(AVCaptureSession *)session
 {
-	[(AVCaptureVideoPreviewLayer *)[self layer] setSession:session];
+    
+	[self.videoPreviewLayer setSession:session];
 }
 
 @end

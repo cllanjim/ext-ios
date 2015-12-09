@@ -2,6 +2,6 @@
 
 @interface CameraView : UIView
 
-@property AVCaptureSession *session;
+@property AVCaptureSession* session;
 
 @end

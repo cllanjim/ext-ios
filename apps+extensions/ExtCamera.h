@@ -29,7 +29,7 @@
 
 - (void)setupCaptureSession:(void (^)(BOOL isTorchAvailable, BOOL isCameraSwitchable))aCallback;
 
-- (void)teardown;
+- (void)teardown:(void (^)())onDone;
 
 - (void)switchCamera:(void (^)(BOOL isTorchAvailable))aCallback;
 
