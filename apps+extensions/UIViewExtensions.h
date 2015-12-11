@@ -2,4 +2,6 @@
 
 - (void)roundTheCorners:(BOOL)shouldRasterize;
 
+- (BOOL)hasRegularSizeClasses;
+
 @end

@@ -16,4 +16,10 @@
     }
 }
 
+- (BOOL)hasRegularSizeClasses
+{
+    return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular &&
+    self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular;
+}
+
 @end
