@@ -46,6 +46,8 @@
 
 - (NSString *)pathCombine:(NSString*)firstArg, ... NS_REQUIRES_NIL_TERMINATION;
 
+- (BOOL)isEmptyOrWhitespace;
+
 - (UIImage *)loadImage;
 
 @end

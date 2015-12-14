@@ -213,6 +213,11 @@
     return combination;
 }
 
+- (BOOL)isEmptyOrWhitespace
+{
+    return [self.trim isEqualToString:@""];
+}
+
 #pragma mark - UIImages
 
 - (UIImage *)loadImage

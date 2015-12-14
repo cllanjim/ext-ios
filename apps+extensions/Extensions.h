@@ -20,6 +20,9 @@
 #define PathCombine(string, ...)    [string pathCombine:__VA_ARGS__,nil]
 #define RandomInt(min, max)         ((min) + arc4random_uniform((max) - (min) + 1))
 
+#define IsStrNilOrWhitespace(str) ((str) == nil || ((NSString *)(str)).isEmptyOrWhitespace)
+
+
 #define DeviceScreenRect        UIScreen.mainScreen.bounds
 #define DeviceScreenSize        UIScreen.mainScreen.bounds.size
 #define WindowRect         UIApplication.sharedApplication.delegate.window.bounds

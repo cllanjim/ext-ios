@@ -75,4 +75,12 @@
     XCTAssert(case1);
 }
 
+- (void)test_IsStrEmptyOrWhitespace
+{
+    XCTAssert(IsStrNilOrWhitespace(@""));
+    XCTAssert(IsStrNilOrWhitespace(@" "));
+    XCTAssert(IsStrNilOrWhitespace(nil));
+    XCTAssertFalse(IsStrNilOrWhitespace(@"     a "));
+}
+
 @end
