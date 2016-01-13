@@ -7,7 +7,7 @@
 {
     [super layoutSubviews];
     
-    [self roundTheCorners:YES];
+    [self setCornersRounded:YES withRasterization:YES];
 }
 
 @end

@@ -2,12 +2,12 @@
 
 @implementation UIView (UIViewExtensions)
 
-- (void)roundTheCorners:(BOOL)shouldRasterize
+- (void)setCornersRounded:(BOOL)cornersRounded withRasterization:(BOOL)shouldRasterize
 {
     CGColorRef backgroudColor = self.backgroundColor.CGColor;
     self.backgroundColor = UIColor.clearColor;
     self.layer.backgroundColor = backgroudColor;
-    self.layer.cornerRadius = self.bounds.size.width / 2;
+    self.layer.cornerRadius = cornersRounded ? self.bounds.size.width / 2 : 0;
     self.layer.masksToBounds = YES;
     if (shouldRasterize)
     {

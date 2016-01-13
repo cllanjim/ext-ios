@@ -1,6 +1,6 @@
 @interface UIView (UIViewExtensions)
 
-- (void)roundTheCorners:(BOOL)shouldRasterize;
+- (void)setCornersRounded:(BOOL)cornersRounded withRasterization:(BOOL)shouldRasterize;
 
 - (BOOL)hasRegularSizeClasses;
 
