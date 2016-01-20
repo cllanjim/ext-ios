@@ -14,6 +14,8 @@
 
 - (void)setupTempDir;
 
+- (id)addMock:(id)mock;
+
 - (NSString*)getTempFilePath:(NSString*)filePath;
 
 - (NSString*)getNewTempDir;

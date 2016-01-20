@@ -4,11 +4,13 @@
 {
     NSString* _tempDir;
     XCTestExpectation* _asyncExpectation;
+    NSMutableArray<OCMockObject *>* _mocks;
 }
 
 - (void)setUp
 {
     [super setUp];
+    _mocks = NSMutableArray.new;
 }
 
 - (void)tearDown
@@ -20,6 +22,10 @@
     if (_asyncExpectation)
     {
         XCTFail(@"Error: asyncTest3_after not called!");
+    }
+    for (OCMockObject* mock in _mocks)
+    {
+        [mock verify];
     }
     [super tearDown];
 }
@@ -44,6 +50,12 @@
         [_tempDir fileOrDirDelete];
         XCTAssertTrue([FileManager createDirectoryAtPath:_tempDir withIntermediateDirectories:NO attributes:nil error:nil]);
     }
+}
+
+- (id)addMock:(id)mock
+{
+    [_mocks addObject:(OCMockObject *)mock];
+    return mock;
 }
 
 - (NSString*)getTempFilePath:(NSString*)filePath
