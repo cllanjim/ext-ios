@@ -40,7 +40,7 @@
 
 #define NavigationBarHeight                 44
 
-#define CallBlock(blockName, ...)               ((blockName) ? blockName(__VA_ARGS__) : nil)
+#define CallBlock(blockName, ...)               if(blockName) blockName(__VA_ARGS__);
 #define CallBlockOnMainQueue(blockName, ...)    if(NSThread.isMainThread) {CallBlock(blockName, __VA_ARGS__);} else {dispatch_async(dispatch_get_main_queue(), ^{ CallBlock(blockName, __VA_ARGS__); });}
 #define CallBlockOnGlobalQueue(blockName, ...)  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{ CallBlock(blockName, __VA_ARGS__); });
 #define VoidBlock void(^)(void)
