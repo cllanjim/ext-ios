@@ -5,19 +5,30 @@
 
 - (CGRect)imageFrame
 {
-    CGFloat imageAspectRatio = self.image.size.width / self.image.size.height;
-    CGFloat viewAspectRatio = self.bounds.size.width / self.bounds.size.height;
+    CGSize imageSize = self.image.size;
+    CGRect viewBounds = self.bounds;
+    CGAffineTransform inverseAffine = CGAffineTransformInvert(self.transform);
+    CGRect viewFrame = CGRectApplyAffineTransform(self.frame, inverseAffine);
+    
+    CGFloat imageAspectRatio = imageSize.width / imageSize.height;
+    CGFloat viewAspectRatio = viewBounds.size.width / viewBounds.size.height;
+    CGRect imageFrame;
+    
     if (imageAspectRatio > viewAspectRatio) // Image is wider than view
     {
-        CGFloat imageWidth = self.bounds.size.width;
-        CGFloat imageHeight = self.bounds.size.width / imageAspectRatio;
-        return CGRectMake(self.frame.origin.x, self.frame.origin.y + (self.bounds.size.height - imageHeight) / 2, imageWidth, imageHeight);
+        CGFloat imageWidth = viewBounds.size.width;
+        CGFloat imageHeight = viewBounds.size.width / imageAspectRatio;
+        imageFrame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y + (viewBounds.size.height - imageHeight) / 2, imageWidth, imageHeight);
     }
+    else // Image is taller than view
+    {
+        CGFloat imageWidth = viewBounds.size.height * imageAspectRatio;
+        CGFloat imageHeight = viewBounds.size.height;
+        imageFrame = CGRectMake(viewFrame.origin.x + (viewBounds.size.width - imageWidth) / 2, viewFrame.origin.y, imageWidth, imageHeight);
+    }
+    CGRect transformedImageFrame = CGRectApplyAffineTransform(imageFrame, self.transform);
     
-    // Image is taller than view
-    CGFloat imageWidth = self.bounds.size.height * imageAspectRatio;
-    CGFloat imageHeight = self.bounds.size.height;
-    return CGRectMake(self.frame.origin.x + (self.bounds.size.width - imageWidth) / 2, self.frame.origin.y, imageWidth, imageHeight);
+    return transformedImageFrame;
 }
 
 - (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration discardingCache:(BOOL)discardingCache
