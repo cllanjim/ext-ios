@@ -4,4 +4,6 @@
 
 - (BOOL)hasRegularSizeClasses;
 
+- (void)setHidden:(BOOL)hidden withDuration:(CGFloat)fadeDuration;
+
 @end

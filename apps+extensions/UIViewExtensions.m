@@ -18,8 +18,23 @@
 
 - (BOOL)hasRegularSizeClasses
 {
-    return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular &&
-    self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular;
+    return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular;
+}
+
+- (void)setHidden:(BOOL)hidden withDuration:(CGFloat)fadeDuration
+{
+    if (self.hidden == hidden) return;
+    
+    self.alpha = self.hidden ? 0 : 1;
+    self.hidden = NO;
+    [UIView animateWithDuration:fadeDuration animations:^
+     {
+         self.alpha = hidden ? 0 : 1;
+     } completion:^(BOOL finished)
+     {
+         self.alpha = 1;
+         self.hidden = hidden;
+     }];
 }
 
 @end
