@@ -24,6 +24,11 @@
 - (void)setHidden:(BOOL)hidden withDuration:(CGFloat)fadeDuration
 {
     if (self.hidden == hidden) return;
+    if (self.superview == nil)
+    {
+        self.hidden = hidden;
+        return;
+    }
     
     self.alpha = self.hidden ? 0 : 1;
     self.hidden = NO;
