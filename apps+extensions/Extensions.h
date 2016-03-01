@@ -44,6 +44,7 @@
 #define CallBlockOnMainQueue(blockName, ...)    if(NSThread.isMainThread) {CallBlock(blockName, __VA_ARGS__);} else {dispatch_async(dispatch_get_main_queue(), ^{ CallBlock(blockName, __VA_ARGS__); });}
 #define CallBlockOnGlobalQueue(blockName, ...)  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{ CallBlock(blockName, __VA_ARGS__); });
 #define VoidBlock void(^)(void)
+#define Weaken(name) __weak typeof(name) name##Weak = name;
 
 #define SendNotificationWithInfo(notificationName, info) dispatch_async(dispatch_get_main_queue(), ^{ [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:self userInfo:info]; });
 #define SendNotification(notificationName) dispatch_async(dispatch_get_main_queue(), ^{ [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:self]; });
