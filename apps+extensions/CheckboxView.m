@@ -156,10 +156,10 @@
     //// Shadow Declarations
     UIColor* shadow = [UIColor blackColor];
     CGSize shadowOffset = CGSizeMake(0.1, -0.1);
-    CGFloat shadowBlurRadius = 0.5;
+    CGFloat shadowBlurRadius = 2.5;
     UIColor* shadow2 = [UIColor blackColor];
     CGSize shadow2Offset = CGSizeMake(0.1, -0.1);
-    CGFloat shadow2BlurRadius = 2.5;
+    CGFloat shadow2BlurRadius = 4.5;
     
     //// Frames
     CGRect frame = self.bounds;
