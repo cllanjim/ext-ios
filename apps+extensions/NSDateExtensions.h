@@ -6,4 +6,6 @@
 
 - (NSString *)sortableDateTimeWithOptionalTimeZoneAbbreviation:(NSString *)timeZoneWithAbbreviation;
 
+- (NSString *)formatForPhotos;
+
 @end

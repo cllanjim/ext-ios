@@ -29,4 +29,14 @@
     return [formatter stringFromDate:self];
 }
 
+- (NSString *)formatForPhotos
+{
+    NSDateFormatter* dateFormatter = NSDateFormatter.new;
+    dateFormatter.timeStyle = kCFDateFormatterShortStyle;
+    dateFormatter.dateStyle = kCFDateFormatterMediumStyle;
+    dateFormatter.locale = NSLocale.autoupdatingCurrentLocale;
+    dateFormatter.doesRelativeDateFormatting = YES;
+    return [dateFormatter stringFromDate:self];
+}
+
 @end
