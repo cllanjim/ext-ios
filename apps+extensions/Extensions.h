@@ -62,9 +62,9 @@
 #define CFLog(format, ...)              NSLog(Concat(@"%@: ", (format)), NSStringFromClass(self.class), __VA_ARGS__);
 #define CLog(message)                   CFLog(@"%@", (message));
 
-#define NotImplemented                  [NSException raise:@"Not implemented" format:@"Not implemented"];
-#define NotImplementedRet               NotImplemented return nil;
-#define NotImplementedRetNum            NotImplemented return 0;
+#define NotImplemented                  { [NSException raise:@"Not implemented" format:@"Not implemented"]; }
+#define NotImplementedRet               { NotImplemented return nil; }
+#define NotImplementedRetNum            { NotImplemented return 0; }
 
 #define GenerateGUID            NSUUID.UUID.UUIDString
 #define FileManager             NSFileManager.defaultManager

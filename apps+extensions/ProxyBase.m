@@ -232,6 +232,6 @@
 
 - (void)apiIsDeprecated { /* Override is not mandatory */ }
 
-- (void)retryRedoingLogin:(void(^)(void))onLoginRedone withErrorCallback:(void(^)(void))onLoginFailed { NotImplemented; }
+- (void)retryRedoingLogin:(void(^)(void))onLoginRedone withErrorCallback:(void(^)(void))onLoginFailed NotImplemented
 
 @end
