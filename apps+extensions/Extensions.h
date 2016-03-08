@@ -61,6 +61,7 @@
 #define ClassName(theClass)             NSStringFromClass(theClass.class)
 #define CFLog(format, ...)              NSLog(Concat(@"%@: ", (format)), NSStringFromClass(self.class), __VA_ARGS__);
 #define CLog(message)                   CFLog(@"%@", (message));
+#define CountReferences(object)         CFGetRetainCount((__bridge CFTypeRef)object)
 
 #define NotImplemented                  { [NSException raise:@"Not implemented" format:@"Not implemented"]; }
 #define NotImplementedRet               { NotImplemented return nil; }
