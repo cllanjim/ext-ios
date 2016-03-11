@@ -24,10 +24,13 @@
 {
     UIViewController* fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController* toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    
     UIView* toView = toVC.view;
     UIView* fromView = fromVC.view;
     
     UIView* containerView = transitionContext.containerView;
+
+    [toView setFrame:fromView.frame];
     [containerView addSubview:toView];
     [containerView sendSubviewToBack:toView];
     
