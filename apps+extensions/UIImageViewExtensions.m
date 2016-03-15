@@ -9,23 +9,30 @@
     CGRect viewBounds = self.bounds;
     CGAffineTransform inverseAffine = CGAffineTransformInvert(self.transform);
     CGRect viewFrame = CGRectApplyAffineTransform(self.frame, inverseAffine);
-    
-    CGFloat imageAspectRatio = imageSize.width / imageSize.height;
-    CGFloat viewAspectRatio = viewBounds.size.width / viewBounds.size.height;
     CGRect imageFrame;
     
-    if (imageAspectRatio > viewAspectRatio) // Image is wider than view
+    if (self.contentMode == UIViewContentModeScaleAspectFill || self.contentMode == UIViewContentModeScaleToFill)
     {
-        CGFloat imageWidth = viewBounds.size.width;
-        CGFloat imageHeight = viewBounds.size.width / imageAspectRatio;
-        imageFrame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y + (viewBounds.size.height - imageHeight) / 2, imageWidth, imageHeight);
+        imageFrame = viewFrame;
     }
-    else // Image is taller than view
+    else if (self.contentMode == UIViewContentModeScaleAspectFit)
     {
-        CGFloat imageWidth = viewBounds.size.height * imageAspectRatio;
-        CGFloat imageHeight = viewBounds.size.height;
-        imageFrame = CGRectMake(viewFrame.origin.x + (viewBounds.size.width - imageWidth) / 2, viewFrame.origin.y, imageWidth, imageHeight);
+        CGFloat imageAspectRatio = imageSize.width / imageSize.height;
+        CGFloat viewAspectRatio = viewBounds.size.width / viewBounds.size.height;
+        if (imageAspectRatio > viewAspectRatio) // Image is wider than view
+        {
+            CGFloat imageWidth = viewBounds.size.width;
+            CGFloat imageHeight = viewBounds.size.width / imageAspectRatio;
+            imageFrame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y + (viewBounds.size.height - imageHeight) / 2, imageWidth, imageHeight);
+        }
+        else // Image is taller than view
+        {
+            CGFloat imageWidth = viewBounds.size.height * imageAspectRatio;
+            CGFloat imageHeight = viewBounds.size.height;
+            imageFrame = CGRectMake(viewFrame.origin.x + (viewBounds.size.width - imageWidth) / 2, viewFrame.origin.y, imageWidth, imageHeight);
+        }
     }
+    
     CGRect transformedImageFrame = CGRectApplyAffineTransform(imageFrame, self.transform);
     
     return transformedImageFrame;
