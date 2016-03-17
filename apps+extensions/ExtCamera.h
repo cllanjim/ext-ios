@@ -15,15 +15,15 @@
 }
 @property (nonatomic,strong) id delegate;
 
-@property AVCaptureSession *session;
-@property AVCaptureDevice *videoDevice;
-@property AVCaptureDeviceInput *videoDeviceInput;
+@property AVCaptureSession* session;
+@property AVCaptureDevice* videoDevice;
+@property AVCaptureDeviceInput* videoDeviceInput;
 @property dispatch_queue_t sessionQueue;
-@property AVCaptureVideoDataOutput *output;
-@property CameraView *cameraView;
+@property AVCaptureVideoDataOutput* output;
+@property CameraView* cameraView;
 @property AVCaptureDevicePosition cameraDevicePosition;
-@property NSString *captureSessionPreset;
-@property NSArray *devices;
+@property NSString* captureSessionPreset;
+@property NSArray* devices;
 
 - (instancetype)init:(CameraView *)aCameraView captureSessionPreset:(NSString *)aCaptureSessionPreset;
 

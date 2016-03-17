@@ -57,7 +57,7 @@
 {
     AVCaptureConnection* captureConnection;
     captureConnection = [_output connectionWithMediaType:AVMediaTypeVideo];
-    if ([captureConnection isVideoOrientationSupported])
+    if (captureConnection.isVideoOrientationSupported)
     {
         [captureConnection setVideoOrientation:anOrientation];
     }
@@ -123,7 +123,7 @@
         {
             [self.session addInput:[self videoDeviceInput]];
         }
-        [self setFramesOrientation:AVCaptureVideoOrientationLandscapeRight];
+        [self setFramesOrientation:AVCaptureVideoOrientationPortrait];
         
         [self.session commitConfiguration];
         CallBlockOnMainQueue(aCallback, _videoDevice.hasTorch && [_videoDevice isTorchModeSupported:AVCaptureTorchModeOn]);
@@ -133,7 +133,7 @@
 - (AVCaptureDevice *)deviceWithMediaType:(AVCaptureDevicePosition)position
 {
     AVCaptureDevice* captureDevice = [_devices firstObject];
-    for (AVCaptureDevice *device in _devices)
+    for (AVCaptureDevice* device in _devices)
     {
         if (device.position == position)
         {

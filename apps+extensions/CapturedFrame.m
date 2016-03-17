@@ -16,7 +16,7 @@
     return self;
 }
 
-- (UIImage *)getImageWithDeviceRotation:(UIDeviceOrientation)deviceRotation
+- (UIImage *)getImageAndCompensateRotation:(UIInterfaceOrientation)recordingOrientation
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer, 0);
@@ -29,19 +29,19 @@
     void* inputBaseAddress = CVPixelBufferGetBaseAddress(imageBuffer);
     
     UIImageOrientation imageOrientation;
-    switch (deviceRotation)
+    switch (recordingOrientation)
     {
-        case UIDeviceOrientationPortrait:
+        case UIInterfaceOrientationPortrait:
             imageOrientation = UIImageOrientationUp;
             break;
-        case UIDeviceOrientationPortraitUpsideDown:
+        case UIInterfaceOrientationPortraitUpsideDown:
             imageOrientation = UIImageOrientationDown;
             break;
-        case UIDeviceOrientationLandscapeRight:
-            imageOrientation = (_cameraDevicePosition == AVCaptureDevicePositionFront ? UIImageOrientationLeft : UIImageOrientationRight);
-            break;
-        case UIDeviceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
             imageOrientation = (_cameraDevicePosition == AVCaptureDevicePositionFront ? UIImageOrientationRight : UIImageOrientationLeft);
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            imageOrientation = (_cameraDevicePosition == AVCaptureDevicePositionFront ? UIImageOrientationLeft : UIImageOrientationRight);
             break;
         default:
             imageOrientation = UIImageOrientationUp;
