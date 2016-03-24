@@ -1,3 +1,4 @@
 Pods libraries dependencies
 
 MRProgress
+SDWebImage
