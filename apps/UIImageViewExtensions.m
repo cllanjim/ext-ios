@@ -55,7 +55,7 @@
      {
          if (image == nil)
          {
-             selfWeak.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+             selfWeak.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
              selfWeak.alpha = 1.0;
              return;
          }
