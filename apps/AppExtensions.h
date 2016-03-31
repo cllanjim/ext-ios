@@ -1,4 +1,5 @@
 #import "Extensions.h"
+#import "UIImageViewExtensions.h"
 #import "AppGet.h"
 #import "UIViewControllerAppExtensions.h"
 #import "MRProgressOverlayViewCustomExt.h"

@@ -3,7 +3,6 @@
 #import "NSUserDefaultsExtensions.h"
 #import "UIViewControllerExtensions.h"
 #import "UIViewExtensions.h"
-#import "UIImageViewExtensions.h"
 #import "UIImageExtensions.h"
 #import "UISearchBarExtensions.h"
 #import "NSArrayExtensions.h"
