@@ -2,6 +2,7 @@
 #import "NSDateExtensions.h"
 #import "NSUserDefaultsExtensions.h"
 #import "UIViewControllerExtensions.h"
+#import "UIImageViewExtensions.h"
 #import "UIViewExtensions.h"
 #import "UIImageExtensions.h"
 #import "UISearchBarExtensions.h"

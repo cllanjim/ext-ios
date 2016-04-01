@@ -2,3 +2,4 @@ Pods libraries dependencies
 
 AFNetworking
 JSONModel
+SDWebImage
