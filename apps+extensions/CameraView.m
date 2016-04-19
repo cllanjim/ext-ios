@@ -20,7 +20,6 @@
 
 - (void)setSession:(AVCaptureSession *)session
 {
-    
 	[self.videoPreviewLayer setSession:session];
 }
 
