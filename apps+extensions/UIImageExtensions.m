@@ -4,13 +4,11 @@
 
 - (UIImage *)rotateImage:(UIImageOrientation)imageOrientation
 {
-    UIImage* imageWithNormalizedOrientation = self.imageWithNormalizedOrientation;
-    CGImageRef quartzImage = imageWithNormalizedOrientation.CGImage;
-    UIImage* rotatedImage = [UIImage imageWithCGImage:quartzImage scale:1.0 orientation:imageOrientation];
+    UIImage* rotatedImage = [UIImage imageWithCGImage:self.CGImage scale:1.0 orientation:imageOrientation];
     return rotatedImage;
 }
 
-- (UIImage *)imageWithNormalizedOrientation
+- (UIImage *)finalizeRotation
 {
     if (self.imageOrientation == UIImageOrientationUp) return self;
     

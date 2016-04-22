@@ -2,7 +2,7 @@
 
 - (UIImage *)rotateImage:(UIImageOrientation)imageOrientation;
 
-- (UIImage *)imageWithNormalizedOrientation;
+- (UIImage *)finalizeRotation;
 
 - (CGSize)pixelSize;
 
