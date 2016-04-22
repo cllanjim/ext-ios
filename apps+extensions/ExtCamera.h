@@ -36,4 +36,6 @@
 
 - (BOOL)isTorchActive;
 
+- (BOOL)isFrontalCamera;
+
 @end

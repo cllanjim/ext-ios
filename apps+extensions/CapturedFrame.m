@@ -16,7 +16,7 @@
     return self;
 }
 
-- (UIImage *)getImageAndCompensateRotation:(UIInterfaceOrientation)recordingOrientation
+- (UIImage *)getImageWithRotation:(UIInterfaceOrientation)cameraOrientation
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer, 0);
@@ -29,7 +29,7 @@
     void* inputBaseAddress = CVPixelBufferGetBaseAddress(imageBuffer);
     
     UIImageOrientation imageOrientation;
-    switch (recordingOrientation)
+    switch (cameraOrientation)
     {
         case UIInterfaceOrientationPortrait:
             imageOrientation = UIImageOrientationUp;

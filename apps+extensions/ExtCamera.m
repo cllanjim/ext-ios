@@ -230,6 +230,11 @@
     return videoDevice.hasTorch && videoDevice.isTorchActive;
 }
 
+- (BOOL)isFrontalCamera
+{
+    return self.currentCaptureDevice.position == AVCaptureDevicePositionFront;
+}
+
 
 #pragma mark - Private
 

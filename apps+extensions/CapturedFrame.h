@@ -4,6 +4,6 @@
 
 - (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition;
 
-- (UIImage *)getImageAndCompensateRotation:(UIInterfaceOrientation)recordingOrientation;
+- (UIImage *)getImageWithRotation:(UIInterfaceOrientation)cameraOrientation;
 
 @end
