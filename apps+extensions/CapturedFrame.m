@@ -1,4 +1,5 @@
 #import "CapturedFrame.h"
+#import "Extensions.h"
 
 @implementation CapturedFrame
 {
@@ -38,22 +39,37 @@
             imageOrientation = UIImageOrientationDown;
             break;
         case UIInterfaceOrientationLandscapeRight:
-            imageOrientation = (_cameraDevicePosition == AVCaptureDevicePositionFront ? UIImageOrientationRight : UIImageOrientationLeft);
+            imageOrientation = UIImageOrientationLeft;
             break;
         case UIInterfaceOrientationLandscapeLeft:
-            imageOrientation = (_cameraDevicePosition == AVCaptureDevicePositionFront ? UIImageOrientationLeft : UIImageOrientationRight);
+            imageOrientation = UIImageOrientationRight;
             break;
         default:
             imageOrientation = UIImageOrientationUp;
     }
     
     CGContextRef context = CGBitmapContextCreate(inputBaseAddress, inputWidth, inputHeight, 8, inputBytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
-    CGImageRef quartzImage = CGBitmapContextCreateImage(context);
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
     CGContextRelease(context);
     CGColorSpaceRelease(colorSpace);
-    UIImage* image = [UIImage imageWithCGImage:quartzImage scale:1.0 orientation:imageOrientation];
-    CGImageRelease(quartzImage);
+    
+    UIImage* image = [UIImage imageWithCGImage:cgImage scale:1.0 orientation:imageOrientation];
+    CGImageRelease(cgImage);
+    
+    if (_cameraDevicePosition == AVCaptureDevicePositionFront)
+    {
+        if (cameraOrientation == UIInterfaceOrientationLandscapeRight)
+        {
+            image = [image rotateImage:UIImageOrientationDown].finalizeRotation;
+            image = [image rotateImage:UIImageOrientationLeft];
+        }
+        else if (cameraOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            image = [image rotateImage:UIImageOrientationDown].finalizeRotation;
+            image = [image rotateImage:UIImageOrientationRight];
+        }
+    }
     return (image);
 }
 

@@ -23,13 +23,13 @@
         _cameraView = aCameraView;
         _captureSessionPreset = aCaptureSessionPreset;
         _delegate = delegate;
-        _cameraDevicePosition = AVCaptureDevicePositionBack;
     }
     return self;
 }
 
-- (void)setupCaptureSession:(VoidBlock)gotSession
+- (void)setupCaptureSession:(VoidBlock)gotSession withDefaultCameraPosition:(AVCaptureDevicePosition)cameraPosition
 {
+    _cameraDevicePosition = cameraPosition;
     _session = AVCaptureSession.new;
     [_session setSessionPreset:_captureSessionPreset];
     [_cameraView setSession:_session];
@@ -217,6 +217,12 @@
 {
     return _devices.count > 1;
 }
+
+- (AVCaptureDevicePosition)cameraPosition
+{
+    return _cameraDevicePosition;
+}
+
 
 - (BOOL)hasTorch
 {

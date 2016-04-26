@@ -14,7 +14,7 @@
 
 - (instancetype)init:(CameraView *)aCameraView withCaptureSessionPreset:(NSString *)aCaptureSessionPreset withDelegate:(id<ExtCameraDelegate>)delegate;
 
-- (void)setupCaptureSession:(VoidBlock)gotSession;
+- (void)setupCaptureSession:(VoidBlock)gotSession withDefaultCameraPosition:(AVCaptureDevicePosition)cameraPosition;
 
 - (void)teardown:(void (^)())onDone;
 
@@ -31,6 +31,8 @@
 - (void)checkCameraPermissions:(void (^)(BOOL cameraGranted))cameraPermissionsCallback;
 
 - (BOOL)canSwitchCamera;
+
+- (AVCaptureDevicePosition)cameraPosition;
 
 - (BOOL)hasTorch;
 
