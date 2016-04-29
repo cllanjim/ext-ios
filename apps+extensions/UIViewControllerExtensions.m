@@ -70,7 +70,7 @@
 - (UIBarButtonItem *)showLoadingMenuItem
 {
     UIBarButtonItem* defaultConfirmButton = self.navigationItem.rightBarButtonItem;
-    UIActivityIndicatorView* activityView = [UIActivityIndicatorView.alloc initWithFrame:CGRectMake(0, 0, 25, 25)];
+    UIActivityIndicatorView* activityView = [[UIActivityIndicatorView.alloc initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] initWithFrame:CGRectMake(0, 0, 25, 25)];
     [activityView sizeToFit];
     [activityView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
     UIBarButtonItem* loadingView = [UIBarButtonItem.alloc initWithCustomView:activityView];
