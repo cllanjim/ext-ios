@@ -230,6 +230,20 @@
     CallBlock(gotSession, downloadTask, progress);
 }
 
+- (BOOL)isReachable
+{
+    return AFNetworkReachabilityManager.sharedManager.reachable;
+}
+
+- (void)onNextReachabilityStatusChange:(void(^)(BOOL isReachable))newReachability
+{
+    [AFNetworkReachabilityManager.sharedManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status)
+     {
+         [AFNetworkReachabilityManager.sharedManager setReachabilityStatusChangeBlock:nil];
+         CallBlock(newReachability, status != AFNetworkReachabilityStatusNotReachable && status != AFNetworkReachabilityStatusUnknown);
+     }];
+}
+
 - (void)apiIsDeprecated { /* Override is not mandatory */ }
 
 - (void)retryRedoingLogin:(void(^)(void))onLoginRedone withErrorCallback:(void(^)(void))onLoginFailed NotImplemented

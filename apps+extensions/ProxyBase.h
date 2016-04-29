@@ -46,4 +46,10 @@ typedef void (^GotDownloadSessionBlock)(NSURLSessionDownloadTask* session, NSPro
 
 - (void)downloadWithResumeData:(NSData *)resumeData toFile:(NSString*)filePath withCallback:(void (^)(void))downloadDone withSessionCallback:(GotDownloadSessionBlock)gotSession withErrorCallback:(DownloadGotErrorBlock)gotError;
 
+- (BOOL)isReachable;
+
+- (void)onNextReachabilityStatusChange:(void(^)(BOOL isReachable))newReachability;
+
+
+
 @end
