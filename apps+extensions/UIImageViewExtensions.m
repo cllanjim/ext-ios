@@ -42,7 +42,8 @@
 - (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration discardingCache:(BOOL)discardingCache
 {
     SDWebImageOptions options = SDWebImageRetryFailed;
-    if (discardingCache) options = options | SDWebImageRefreshCached;
+    if (discardingCache)
+        options = options | SDWebImageRefreshCached;
     
     __block BOOL imageAlreadySet = NO;
     
@@ -66,7 +67,8 @@
              return;
          }
          
-         if (imageAlreadySet) return;
+         if (imageAlreadySet)
+             return;
          
          selfWeak.backgroundColor = UIColor.clearColor;
          selfWeak.alpha = 0.0;
