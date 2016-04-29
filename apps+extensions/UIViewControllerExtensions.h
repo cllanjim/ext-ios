@@ -8,8 +8,8 @@
 
 - (void)showActionSheetWithTitle:(NSString *)aTitle withMessage:(NSString *)aMessage withButtonString:(NSString *)buttonString withDestructiveAction:(BOOL)isDestructiveAction withSender:(id)aSender withButtonCallback:(void(^)(void))aConfirmCallback withOptionalCancelString:(NSString *)cancelString withOptionalCancelCallback:(void(^)(void))aCancelCallback;
 
-- (UIBarButtonItem *)showLoadingMenuItem;
+- (UIBarButtonItem *)showRightLoadingMenuItem;
 
-- (void)hideLoadingMenuItem:(UIBarButtonItem *)loadingItem;
+- (void)hideRightLoadingMenuItem:(UIBarButtonItem *)loadingItem;
 
 @end

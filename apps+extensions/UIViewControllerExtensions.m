@@ -67,7 +67,7 @@
     }];
 }
 
-- (UIBarButtonItem *)showLoadingMenuItem
+- (UIBarButtonItem *)showRightLoadingMenuItem
 {
     UIBarButtonItem* defaultConfirmButton = self.navigationItem.rightBarButtonItem;
     UIActivityIndicatorView* activityView = [[UIActivityIndicatorView.alloc initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] initWithFrame:CGRectMake(0, 0, 25, 25)];
@@ -79,7 +79,7 @@
     return defaultConfirmButton;
 }
 
-- (void)hideLoadingMenuItem:(UIBarButtonItem *)loadingItem
+- (void)hideRightLoadingMenuItem:(UIBarButtonItem *)loadingItem
 {
     [self.navigationItem setRightBarButtonItem:loadingItem];
 }
