@@ -38,14 +38,31 @@
     return transformedImageFrame;
 }
 
-// TODO: discardingCache=YES leads to a memory leak!
 - (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration discardingCache:(BOOL)discardingCache
 {
-    SDWebImageOptions options = SDWebImageRetryFailed;
     if (discardingCache)
-        options = options | SDWebImageRefreshCached;
+    {
+        [SDImageCache.sharedImageCache removeImageForKey:imageUrl.absoluteString fromDisk:YES withCompletion:^
+         {
+             [self setImageWithUrl:imageUrl withFadeOnCompletion:fadeDuration];
+         }];
+    }
+    else
+    {
+        [self setImageWithUrl:imageUrl withFadeOnCompletion:fadeDuration];
+    }
+}
+
+
+#pragma mark - Private
+
+- (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration
+{
+    self.backgroundColor = UIColor.clearColor;
     
-    __block BOOL imageAlreadySet = NO;
+    SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
+    
+    __block BOOL doNotAnimate = NO;
     
     Weaken(self);
     
@@ -56,21 +73,18 @@
      {
          if (image == nil)
          {
-             selfWeak.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
-             selfWeak.alpha = 1.0;
              return;
          }
          
          if (cacheType == SDImageCacheTypeMemory || cacheType == SDImageCacheTypeDisk)
          {
-             imageAlreadySet = YES;
+             doNotAnimate = YES;
              return;
          }
          
-         if (imageAlreadySet)
+         if (doNotAnimate)
              return;
          
-         selfWeak.backgroundColor = UIColor.clearColor;
          selfWeak.alpha = 0.0;
          [UIView animateWithDuration:fadeDuration animations:^
           {
