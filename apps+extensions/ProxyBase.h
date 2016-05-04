@@ -18,11 +18,19 @@ typedef void (^DownloadGotErrorBlock)(StatusCodes statusCode, NSString* errorDes
 typedef void (^NetJobRetryAgainBlock)(StatusCodes statusCode, id retryHint);
 typedef void (^NetJobRetryRedoingLoginBlock)(StatusCodes statusCode, id retryHint);
 typedef void (^NetworkJobBlock)(NetJobRetryAgainBlock onJobRetryAgain, NetJobRetryRedoingLoginBlock onJobRetryRedoingLoginBlock, id retryHint);
-typedef void (^GotUploadSessionBlock)(NSURLSessionUploadTask* session, NSProgress* progress);
-typedef void (^GotDownloadSessionBlock)(NSURLSessionDownloadTask* session, NSProgress* progress);
+typedef void (^ProgressBlock)(double fractionCompleted);
 
 
 @interface ProxyBase : NSObject
+
+#pragma mark - Abstract
+
+- (void)retryRedoingLogin:(void(^)(void))onLoginRedone withErrorCallback:(void(^)(void))onLoginFailed;
+
+- (void)apiIsDeprecated;
+
+
+#pragma mark - Public
 
 - (instancetype)initWithNumberOfRetrials:(NSUInteger)retrials;
 
@@ -30,21 +38,17 @@ typedef void (^GotDownloadSessionBlock)(NSURLSessionDownloadTask* session, NSPro
 
 - (void)doNetworkTask:(NetworkJobBlock)networkJob withErrorCallback:(GotErrorBlock)onError;
 
-- (void)retryRedoingLogin:(void(^)(void))onLoginRedone withErrorCallback:(void(^)(void))onLoginFailed;
+- (NSURLSessionDataTask *)getRequest:(Route *)route withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError;
 
-- (void)apiIsDeprecated;
+- (NSURLSessionDataTask *)postRequest:(Route *)route withBody:(NSString *)aBody withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError;
 
-- (AFHTTPRequestOperation *)getRequest:(Route *)route withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError;
+- (NSURLSessionDataTask *)postRequest:(Route *)route withMultipartBuilder:(void (^)(id <AFMultipartFormData> formData))aBuilderFunction withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError;
 
-- (AFHTTPRequestOperation *)postRequest:(Route *)route withBody:(NSString *)aBody withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError;
+- (NSURLSessionUploadTask *)uploadRequest:(Route *)route withMultipartBuilder:(void (^)(id <AFMultipartFormData> formData))aBuilderFunction withCallback:(GotJsonBlock)gotJson withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(GotErrorBlock)gotError;
 
-- (AFHTTPRequestOperation *)postRequest:(Route *)route withMultipartBuilder:(void (^)(id <AFMultipartFormData> formData))aBuilderFunction withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError;
+- (NSURLSessionDownloadTask *)downloadData:(Route *)route toFile:(NSString*)filePath withCallback:(void (^)(void))downloadDone withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(DownloadGotErrorBlock)gotError;
 
-- (void)uploadRequest:(Route *)route withMultipartBuilder:(void (^)(id <AFMultipartFormData> formData))aBuilderFunction withCallback:(GotJsonBlock)gotJson withSessionCallback:(GotUploadSessionBlock)gotSession withErrorCallback:(GotErrorBlock)gotError;
-
-- (void)downloadData:(Route *)route toFile:(NSString*)filePath withCallback:(void (^)(void))downloadDone withSessionCallback:(GotDownloadSessionBlock)gotSession withErrorCallback:(DownloadGotErrorBlock)gotError;
-
-- (void)downloadWithResumeData:(NSData *)resumeData toFile:(NSString*)filePath withCallback:(void (^)(void))downloadDone withSessionCallback:(GotDownloadSessionBlock)gotSession withErrorCallback:(DownloadGotErrorBlock)gotError;
+- (NSURLSessionDownloadTask *)downloadWithResumeData:(NSData *)resumeData toFile:(NSString *)filePath withCallback:(void (^)(void))downloadDone withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(DownloadGotErrorBlock)gotError;
 
 - (BOOL)isReachable;
 
