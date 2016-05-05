@@ -54,6 +54,7 @@ typedef void (^ProgressBlock)(double fractionCompleted);
 
 - (void)onNextReachabilityStatusChange:(void(^)(BOOL isReachable))newReachability;
 
+- (NSProgress *)getProgressForTask:(NSURLSessionTask *)sessionTask;
 
 
 @end

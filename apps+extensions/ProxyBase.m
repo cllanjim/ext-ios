@@ -2,6 +2,11 @@
 #import "JSONModel+networking.h"
 #import "Extensions.h"
 
+
+@interface AFURLSessionManagerTaskDelegate : NSObject
+@property (nonatomic, strong) NSProgress *downloadProgress;
+@end
+
 @implementation ProxyBase
 {
     NSUInteger _numberOfRetrials;
@@ -73,7 +78,7 @@
 
 - (NSURLSessionDataTask *)postRequest:(Route *)route withBody:(NSString *)aBody withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError
 {
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:route.getUrl]];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:route.getURL];
     [request setHTTPMethod:@"POST"];
     [request setValue: @"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:[aBody dataUsingEncoding:NSUTF8StringEncoding]];
@@ -91,6 +96,7 @@
         }
     }];
     [postTask resume];
+    return postTask;
 }
 
 - (NSURLSessionDataTask *)postRequest:(Route *)route withMultipartBuilder:(void (^)(id <AFMultipartFormData> formData))aBuilderFunction withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError
@@ -282,6 +288,20 @@
          [AFNetworkReachabilityManager.sharedManager setReachabilityStatusChangeBlock:nil];
          CallBlock(newReachability, status != AFNetworkReachabilityStatusNotReachable && status != AFNetworkReachabilityStatusUnknown);
      }];
+}
+
+- (NSProgress *)getProgressForTask:(NSURLSessionTask *)sessionTask
+{
+    NSProgress* downloadProgress;
+    @try
+    {
+        NSMutableDictionary* mutableTaskDelegatesKeyedByTaskIdentifier = [_sessionManager valueForKey:@"mutableTaskDelegatesKeyedByTaskIdentifier"];
+        AFURLSessionManagerTaskDelegate* taskDelegate = mutableTaskDelegatesKeyedByTaskIdentifier[@(sessionTask.taskIdentifier)];
+        downloadProgress = taskDelegate.downloadProgress;
+        
+    } @catch (NSException *exception) { }
+    
+    return downloadProgress;
 }
 
 
