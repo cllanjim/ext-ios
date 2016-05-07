@@ -72,18 +72,19 @@
     [request setValue: @"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:[aBody dataUsingEncoding:NSUTF8StringEncoding]];
     
-    NSURLSessionDataTask* postTask = [_sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error)
-                                      {
-                                          if (error)
-                                          {
-                                              NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
-                                              CallBlock(gotError, statusCode, error.localizedDescription);
-                                          }
-                                          else
-                                          {
-                                              CallBlock(gotJson, responseObject);
-                                          }
-                                      }];
+    NSURLSessionDataTask* postTask =
+    [_sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error)
+     {
+         if (error)
+         {
+             NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+             CallBlock(gotError, statusCode, error.localizedDescription);
+         }
+         else
+         {
+             CallBlock(gotJson, responseObject);
+         }
+     }];
     [postTask resume];
     return postTask;
 }
@@ -106,27 +107,29 @@
 
 - (NSURLSessionUploadTask *)uploadRequest:(Route *)route withMultipartBuilder:(void (^)(id <AFMultipartFormData> formData))aBuilderFunction withCallback:(GotJsonBlock)gotJson withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(GotErrorBlock)gotError
 {
-    NSMutableURLRequest* request = [AFHTTPRequestSerializer.serializer multipartFormRequestWithMethod:@"POST" URLString:route.getUrl parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
-                                    {
-                                        CallBlock(aBuilderFunction, formData);
-                                    } error:nil];
+    NSMutableURLRequest* request =
+    [AFHTTPRequestSerializer.serializer multipartFormRequestWithMethod:@"POST" URLString:route.getUrl parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
+     {
+         CallBlock(aBuilderFunction, formData);
+     } error:nil];
     
-    NSURLSessionUploadTask* uploadTask = [_sessionManager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress)
-                                          {
-                                              CallBlockOnMainQueue(progressCallback, uploadProgress.fractionCompleted);
-                                              
-                                          } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error)
-                                          {
-                                              if (error)
-                                              {
-                                                  NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
-                                                  CallBlock(gotError, statusCode, error.localizedDescription);
-                                              }
-                                              else
-                                              {
-                                                  CallBlock(gotJson, responseObject);
-                                              }
-                                          }];
+    NSURLSessionUploadTask* uploadTask =
+    [_sessionManager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress)
+     {
+         CallBlockOnMainQueue(progressCallback, uploadProgress.fractionCompleted);
+         
+     } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error)
+     {
+         if (error)
+         {
+             NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+             CallBlock(gotError, statusCode, error.localizedDescription);
+         }
+         else
+         {
+             CallBlock(gotJson, responseObject);
+         }
+     }];
     [uploadTask resume];
     return uploadTask;
 }
@@ -134,54 +137,56 @@
 - (NSURLSessionDownloadTask *)downloadData:(Route *)route toFile:(NSString*)filePath withCallback:(void (^)(void))downloadDone withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(DownloadGotErrorBlock)gotError
 {
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:route.getUrl]];
-    NSURLSessionDownloadTask* downloadTask = [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress)
-                                              {
-                                                  CallBlockOnMainQueue(progressCallback, downloadProgress.fractionCompleted);
-                                                  
-                                              } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response)
-                                              {
-                                                  return [NSURL fileURLWithPath:filePath];
-                                                  
-                                              } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error)
-                                              {
-                                                  if (error)
-                                                  {
-                                                      if (error.code == NSURLErrorCancelled) return; // Download programmatically cancelled
-                                                      NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
-                                                      NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
-                                                      CallBlock(gotError, statusCode, [error localizedDescription], resumeData);
-                                                  }
-                                                  else
-                                                  {
-                                                      CallBlock(downloadDone);
-                                                  }
-                                              }];
+    NSURLSessionDownloadTask* downloadTask =
+    [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress)
+     {
+         CallBlockOnMainQueue(progressCallback, downloadProgress.fractionCompleted);
+         
+     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response)
+     {
+         return [NSURL fileURLWithPath:filePath];
+         
+     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error)
+     {
+         if (error)
+         {
+             if (error.code == NSURLErrorCancelled) return; // Download programmatically cancelled
+             NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
+             NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+             CallBlock(gotError, statusCode, [error localizedDescription], resumeData);
+         }
+         else
+         {
+             CallBlock(downloadDone);
+         }
+     }];
     [downloadTask resume];
     return downloadTask;
 }
 
 - (NSURLSessionDownloadTask *)downloadWithResumeData:(NSData *)resumeData toFile:(NSString *)filePath withCallback:(void (^)(void))downloadDone withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(DownloadGotErrorBlock)gotError
 {
-    NSURLSessionDownloadTask* downloadTask = [_sessionManager downloadTaskWithResumeData:resumeData progress:^(NSProgress * _Nonnull downloadProgress)
-                                              {
-                                                  CallBlockOnMainQueue(progressCallback, downloadProgress.fractionCompleted);
-                                              } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response)
-                                              {
-                                                  return [NSURL fileURLWithPath:filePath];
-                                              } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error)
-                                              {
-                                                  if (error)
-                                                  {
-                                                      if (error.code == NSURLErrorCancelled) return; // Download programmatically cancelled
-                                                      NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
-                                                      NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
-                                                      CallBlock(gotError, statusCode, [error localizedDescription], resumeData);
-                                                  }
-                                                  else
-                                                  {
-                                                      CallBlock(downloadDone);
-                                                  }
-                                              }];
+    NSURLSessionDownloadTask* downloadTask =
+    [_sessionManager downloadTaskWithResumeData:resumeData progress:^(NSProgress * _Nonnull downloadProgress)
+     {
+         CallBlockOnMainQueue(progressCallback, downloadProgress.fractionCompleted);
+     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response)
+     {
+         return [NSURL fileURLWithPath:filePath];
+     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error)
+     {
+         if (error)
+         {
+             if (error.code == NSURLErrorCancelled) return; // Download programmatically cancelled
+             NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
+             NSUInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+             CallBlock(gotError, statusCode, [error localizedDescription], resumeData);
+         }
+         else
+         {
+             CallBlock(downloadDone);
+         }
+     }];
     [downloadTask resume];
     return downloadTask;
 }
@@ -223,7 +228,7 @@
     NSString* networkErrorDescription = @"Function failed too many times for a network error";
     NetJobRetryAgainBlock onJobRetryAgainBlock = ^(StatusCodes statusCode, id retryHint)
     {
-        if (retryNumber == 0 || statusCode == StatusCodesBadRequest)
+        if (retryNumber == 0 || statusCode == StatusCodesBadRequest || !self.isReachable)
         {
             CallBlock(onError, statusCode, networkErrorDescription);
         }
