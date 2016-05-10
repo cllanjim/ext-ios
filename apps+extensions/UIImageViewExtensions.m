@@ -38,29 +38,17 @@
     return transformedImageFrame;
 }
 
-- (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration discardingCache:(BOOL)discardingCache
-{
-    if (discardingCache)
-    {
-        [SDImageCache.sharedImageCache removeImageForKey:imageUrl.absoluteString fromDisk:YES withCompletion:^
-         {
-             [self setImageWithUrl:imageUrl withFadeOnCompletion:fadeDuration];
-         }];
-    }
-    else
-    {
-        [self setImageWithUrl:imageUrl withFadeOnCompletion:fadeDuration];
-    }
-}
-
 
 #pragma mark - Private
 
-- (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration
+- (void)setImageWithUrl:(NSURL *)imageUrl withFadeOnCompletion:(NSTimeInterval)fadeDuration discardingCache:(BOOL)discardingCache
 {
     self.backgroundColor = UIColor.clearColor;
     
     SDWebImageOptions options = SDWebImageRetryFailed | SDWebImageLowPriority;
+    
+    if (discardingCache)
+        options = options | SDWebImageRefreshCached;
     
     __block BOOL doNotAnimate = NO;
     
