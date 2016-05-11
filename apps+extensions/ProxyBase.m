@@ -50,7 +50,7 @@
 
 - (void)doNetworkTask:(NetworkJobBlock)networkJob withErrorCallback:(GotErrorBlock)onError
 {
-    [self doNetworkTaskRecursive:networkJob retryCount:_numberOfRetrials-1 withErrorCallback:onError withRetryHint:nil];
+    [self doNetworkTaskRecursive:networkJob retryCount:_numberOfRetrials withErrorCallback:onError withRetryHint:nil];
 }
 
 - (NSURLSessionDataTask *)getRequest:(Route *)route withCallback:(GotJsonBlock)gotJson withErrorCallback:(GotErrorBlock)gotError
@@ -228,7 +228,7 @@
     NSString* networkErrorDescription = @"Function failed too many times for a network error";
     NetJobRetryAgainBlock onJobRetryAgainBlock = ^(StatusCodes statusCode, id retryHint)
     {
-        if (retryNumber == 0 || statusCode == StatusCodesBadRequest || !self.isReachable)
+        if (retryNumber == 1 || statusCode == StatusCodesBadRequest || !self.isReachable)
         {
             CallBlock(onError, statusCode, networkErrorDescription);
         }
@@ -240,7 +240,10 @@
         {
             [Run onGlobalQueue:^
              {
-                 int timeToWait = pow(_numberOfRetrials - retryNumber, 2); // Wait for 1^2=1, 2^2=4, 3^2=9, ... seconds each trial...
+                 int timeToWait = pow(_numberOfRetrials - retryNumber + 1, 2); /* Wait for 1^2=1 seconds after first error,
+                                                                                * 2^2=4 after second error, 
+                                                                                * 3^2=9 after third error, ...
+                                                                                */
                  Pause(timeToWait);
                  [self doNetworkTaskRecursive:networkJob retryCount:retryNumber-1 withErrorCallback:onError withRetryHint:aRetryHint];
              }];
