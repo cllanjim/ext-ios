@@ -250,7 +250,7 @@
         }
     };
     
-    NetJobRetryRedoingLoginBlock onJobRetryRedoingLoginBlock = ^(StatusCodes statusCode, id retryHint)
+    NetJobRetryAgainBlock onJobRetryRedoingLoginBlock = ^(StatusCodes statusCode, id retryHint)
     {
         if (statusCode == StatusCodesForbidden)
         {
