@@ -4,14 +4,14 @@
 
 
 @interface AFURLSessionManagerTaskDelegate : NSObject
-@property (nonatomic, strong) NSProgress *downloadProgress;
+@property (nonatomic, strong) NSProgress* downloadProgress;
 @end
 
 @implementation ProxyBase
 {
     NSUInteger _numberOfRetrials;
     AFHTTPSessionManager* _sessionManager;
-    NSURLSessionConfiguration* _sessionManagerConfiguration;
+    NSString* _userAgentString;
 }
 
 
@@ -37,7 +37,6 @@
     if (self = [super init])
     {
         _numberOfRetrials = retrials;
-        _sessionManagerConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration;
         _sessionManager = [AFHTTPSessionManager.alloc initWithBaseURL:nil sessionConfiguration:nil];
     }
     return self;
@@ -45,7 +44,8 @@
 
 - (void)setUserAgent:(NSString*)userAgentString
 {
-    [_sessionManagerConfiguration setHTTPAdditionalHeaders:@{@"User-Agent": userAgentString}];
+    _userAgentString = userAgentString;
+    [_sessionManager.requestSerializer setValue:userAgentString forHTTPHeaderField:@"User-Agent"];
 }
 
 - (void)doNetworkTask:(NetworkJobBlock)networkJob withErrorCallback:(GotErrorBlock)onError
@@ -70,6 +70,7 @@
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:route.getURL];
     [request setHTTPMethod:@"POST"];
     [request setValue: @"application/json" forHTTPHeaderField:@"Content-Type"];
+    [self addUserAgentToRequest:request];
     [request setHTTPBody:[aBody dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSURLSessionDataTask* postTask =
@@ -112,6 +113,7 @@
      {
          CallBlock(aBuilderFunction, formData);
      } error:nil];
+    [self addUserAgentToRequest:request];
     
     NSURLSessionUploadTask* uploadTask =
     [_sessionManager uploadTaskWithStreamedRequest:request progress:^(NSProgress * _Nonnull uploadProgress)
@@ -137,6 +139,8 @@
 - (NSURLSessionDownloadTask *)downloadData:(Route *)route toFile:(NSString*)filePath withCallback:(void (^)(void))downloadDone withProgressCallback:(ProgressBlock)progressCallback withErrorCallback:(DownloadGotErrorBlock)gotError
 {
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:route.getUrl]];
+    [self addUserAgentToRequest:request];
+    
     NSURLSessionDownloadTask* downloadTask =
     [_sessionManager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress)
      {
@@ -223,6 +227,12 @@
 
 #pragma mark - Private
 
+- (void)addUserAgentToRequest:(NSMutableURLRequest *)request
+{
+    if (_userAgentString)
+        [request setValue:_userAgentString forHTTPHeaderField:@"User-Agent"];
+}
+
 - (void)doNetworkTaskRecursive:(NetworkJobBlock)networkJob retryCount:(NSUInteger)retryNumber withErrorCallback:(GotErrorBlock)onError withRetryHint:(id)aRetryHint
 {
     NSString* networkErrorDescription = @"Function failed too many times for a network error";
@@ -241,7 +251,7 @@
             [Run onGlobalQueue:^
              {
                  int timeToWait = pow(_numberOfRetrials - retryNumber + 1, 2); /* Wait for 1^2=1 seconds after first error,
-                                                                                * 2^2=4 after second error, 
+                                                                                * 2^2=4 after second error,
                                                                                 * 3^2=9 after third error, ...
                                                                                 */
                  Pause(timeToWait);
