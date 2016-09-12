@@ -16,8 +16,7 @@ typedef void (^GotJsonBlock)(NSDictionary* json);
 typedef void (^GotErrorBlock)(StatusCodes statusCode, NSString* errorDescription);
 typedef void (^DownloadGotErrorBlock)(StatusCodes statusCode, NSString* errorDescription, NSData* resumeData);
 typedef void (^NetJobRetryAgainBlock)(StatusCodes statusCode, id retryHint);
-typedef void (^NetJobRetryRedoingLoginBlock)(StatusCodes statusCode, id retryHint);
-typedef void (^NetworkJobBlock)(NetJobRetryAgainBlock onJobRetryAgain, NetJobRetryRedoingLoginBlock onJobRetryRedoingLoginBlock, id retryHint);
+typedef void (^NetworkJobBlock)(NetJobRetryAgainBlock onJobRetryAgain, NetJobRetryAgainBlock onJobRetryRedoingLoginBlock, id retryHint);
 typedef void (^ProgressBlock)(double fractionCompleted);
 
 

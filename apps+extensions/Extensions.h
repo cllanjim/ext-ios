@@ -31,6 +31,7 @@
 #define isIpad2 (isIpad && ((DeviceScreenSize.width == 768 && DeviceScreenSize.height == 1024) || (DeviceScreenSize.width == 1024 && DeviceScreenSize.height == 768)))
 #define iPhone4_5_6_6p(value4,value5,value6,value6p) (DeviceScreenSize.height < 568 ? (value4) : (DeviceScreenSize.width < 375 ? (value5) : (DeviceScreenSize.width > 375 ? (value6p) : (value6))))
 #define iPhone_iPad(iPhoneValue,iPadValue) (isIpad ? (iPadValue) : (iPhoneValue))
+#define iOS10OrNewer (NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 10)
 
 #define Limit(number,min,max) ((number) < (min) ? min : ((number) > (max) ? (max) : (number)))
 
