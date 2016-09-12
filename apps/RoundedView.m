@@ -1,7 +1,7 @@
-#import "RoundedImageView.h"
-#import "Extensions.h"
+#import "RoundedView.h"
+#import "AppExtensions.h"
 
-@implementation RoundedImageView
+@implementation RoundedView
 
 - (void)layoutSubviews
 {

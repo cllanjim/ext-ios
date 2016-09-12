@@ -193,16 +193,21 @@
 
 - (BOOL)isReachable
 {
+#if !TARGET_OS_WATCH
     return AFNetworkReachabilityManager.sharedManager.reachable;
+#endif
+    return YES;
 }
 
 - (void)onNextReachabilityStatusChange:(void(^)(BOOL isReachable))newReachability
 {
+#if !TARGET_OS_WATCH
     [AFNetworkReachabilityManager.sharedManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status)
      {
          [AFNetworkReachabilityManager.sharedManager setReachabilityStatusChangeBlock:nil];
          CallBlock(newReachability, status != AFNetworkReachabilityStatusNotReachable && status != AFNetworkReachabilityStatusUnknown);
      }];
+#endif
 }
 
 - (NSProgress *)getProgressForTask:(NSURLSessionTask *)sessionTask

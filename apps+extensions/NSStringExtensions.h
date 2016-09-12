@@ -1,3 +1,5 @@
+#import <UIKit/UIKit.h>
+
 @interface NSString (NSStringExtensions)
 
 - (BOOL)fileExists;
