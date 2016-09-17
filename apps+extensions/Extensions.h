@@ -48,8 +48,9 @@
 #define RegisterNotification(notificationName, methodName) [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(methodName) name:notificationName object:nil];
 #define UnRegisterNotification(notificationName) [NSNotificationCenter.defaultCenter removeObserver:self name:notificationName object:nil];
 
+#define IgnoringInteraction                     (UIApplication.sharedApplication.isIgnoringInteractionEvents)
 #define DisableInteraction                      [UIApplication.sharedApplication beginIgnoringInteractionEvents];
-#define EnableInteraction                       if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]){[UIApplication.sharedApplication endIgnoringInteractionEvents];}
+#define EnableInteraction                       if (IgnoringInteraction){[UIApplication.sharedApplication endIgnoringInteractionEvents];}
 
 #define Throw(exceptionString)                  [NSException raise:@"Exception" format:@"%@", exceptionString];
 #define ThrowWithFormat(exceptionString, ...)   [NSException raise:@"Exception" format:exceptionString, __VA_ARGS__];
