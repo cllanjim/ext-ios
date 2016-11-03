@@ -58,13 +58,13 @@
     return mock;
 }
 
-- (NSString*)getTempFilePath:(NSString*)filePath
+- (NSString *)getTempFilePath:(NSString*)filePath
 {
     [self setupTempDir];
     return [_tempDir pathAppend:filePath];
 }
 
-- (NSString*)getNewTempDir
+- (NSString *)getNewTempDir
 {
     [self setupTempDir];
     NSString* newTempDir = [_tempDir pathAppend:GenerateGUID];
@@ -72,7 +72,7 @@
     return newTempDir;
 }
 
-- (NSUInteger)getDifferencesBetween:(NSData*)actualData and:(NSData*)expectedData
+- (NSUInteger)getDifferencesBetween:(NSData *)actualData and:(NSData *)expectedData
 {
     uint8_t* actualBytes = (uint8_t*)[actualData bytes];
     uint8_t* expectedBytes = (uint8_t*)[expectedData bytes];
