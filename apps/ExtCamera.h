@@ -12,7 +12,7 @@
 
 @interface ExtCamera : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 
-- (instancetype)init:(CameraView *)aCameraView withCaptureSessionPreset:(NSString *)aCaptureSessionPreset withDelegate:(id<ExtCameraDelegate>)delegate;
+- (instancetype)init:(CameraView *)aCameraView withCaptureSessionPreset:(NSString *)aCaptureSessionPreset withFrameFormat:(FrameFormat)frameFormat withDelegate:(id<ExtCameraDelegate>)delegate;
 
 - (void)setupCaptureSession:(VoidBlock)gotSession withDefaultCameraPosition:(AVCaptureDevicePosition)cameraPosition;
 

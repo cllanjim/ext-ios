@@ -4,17 +4,50 @@
 @implementation CapturedFrame
 {
     CMSampleBufferRef _capturedBuffer;
+    FrameFormat _frameFormat;
     AVCaptureDevicePosition _cameraDevicePosition;
 }
 
-- (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition
+- (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withFrameFormat:(FrameFormat)frameFormat withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition
 {
     if (self = [super init])
     {
         _capturedBuffer = aCapturedBuffer;
+        _frameFormat = frameFormat;
         _cameraDevicePosition = aCameraDevicePosition;
     }
     return self;
+}
+
+- (void)fillYuvFrame:(uint8_t **)yuvDestinationPlanesArray
+{
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
+    CVPixelBufferLockBaseAddress(imageBuffer, 0);
+    
+    size_t yPlaneWidth = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
+    size_t yPlaneHeight = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
+    unsigned int yPlaneSize = yPlaneWidth * yPlaneHeight;
+    void * ySourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
+    memcpy(yuvDestinationPlanesArray[0], ySourcePlanePointer, yPlaneSize);
+    
+    size_t uvPlaneWidth = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 1);
+    size_t uvPlaneHeight = CVPixelBufferGetHeightOfPlane(imageBuffer, 1);
+    size_t uvPlaneSize = uvPlaneWidth * uvPlaneHeight;
+    uint8_t* uvSourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
+    unsigned int uDestinationIndex = 0;
+    unsigned int vDestinationIndex = 0;
+    for (unsigned int uvPixelId = 0; uvPixelId < uvPlaneSize; uvPixelId += 2)
+    {
+        yuvDestinationPlanesArray[1][uDestinationIndex++] = uvSourcePlanePointer[uvPixelId];
+        yuvDestinationPlanesArray[2][vDestinationIndex++] = uvSourcePlanePointer[uvPixelId + 1];
+    }
+    
+    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+}
+
+- (void)saveToFile:(NSString *)filePath
+{
+    
 }
 
 - (UIImage *)getImageWithRotation:(UIInterfaceOrientation)cameraOrientation

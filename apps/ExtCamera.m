@@ -12,16 +12,18 @@
     AVCaptureVideoDataOutput* _output;
     AVCaptureDevicePosition _cameraDevicePosition;
     NSString* _captureSessionPreset;
+    FrameFormat _frameFormat;
 }
 
 #pragma mark - Public
 
-- (instancetype)init:(CameraView *)aCameraView withCaptureSessionPreset:(NSString *)aCaptureSessionPreset withDelegate:(id<ExtCameraDelegate>)delegate
+- (instancetype)init:(CameraView *)aCameraView withCaptureSessionPreset:(NSString *)aCaptureSessionPreset withFrameFormat:(FrameFormat)frameFormat withDelegate:(id<ExtCameraDelegate>)delegate
 {
     if (self = [super init])
     {
         _cameraView = aCameraView;
         _captureSessionPreset = aCaptureSessionPreset;
+        _frameFormat = frameFormat;
         _delegate = delegate;
     }
     return self;
@@ -49,7 +51,17 @@
         
         dispatch_queue_t queue = dispatch_queue_create("camera frames queue", NULL);
         [_output setSampleBufferDelegate:self queue:queue];
-        _output.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+        
+        if (_frameFormat == FrameFormatYUV && [_output.availableVideoCVPixelFormatTypes containsObject:@(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)])
+        {
+            _output.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+        }
+        else
+        {
+            _output.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey];
+        }
+        
+        
         [_session startRunning];
         CallBlockOnMainQueue(gotSession);
     });
@@ -261,7 +273,7 @@
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-    [_delegate frameCaptured:[CapturedFrame.alloc initWithBuffer:sampleBuffer withDevicePosition:_cameraDevicePosition]];
+    [_delegate frameCaptured:[CapturedFrame.alloc initWithBuffer:sampleBuffer withFrameFormat:FrameFormatYUV withDevicePosition:_cameraDevicePosition]];
 }
 
 - (AVCaptureDevice *)deviceWithMediaType:(AVCaptureDevicePosition)position
