@@ -6,7 +6,7 @@
 
 @required
 
-- (void)frameCaptured:(CapturedFrame*)capturedFrame;
+- (void)frameCaptured:(CapturedFrame *)capturedFrame;
 
 @end
 
