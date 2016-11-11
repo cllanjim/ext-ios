@@ -9,11 +9,12 @@
 
 # pragma mark - Public
 
-- (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition
+- (instancetype)initWithBuffer:(CMSampleBufferRef)capturedBuffer withDevicePosition:(AVCaptureDevicePosition)cameraDevicePosition
 {
     if (self = [super init])
     {
-        _cameraDevicePosition = aCameraDevicePosition;
+        _capturedBuffer = capturedBuffer;
+        _cameraDevicePosition = cameraDevicePosition;
     }
     return self;
 }

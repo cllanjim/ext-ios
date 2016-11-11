@@ -2,7 +2,7 @@
 
 @interface CapturedFrame : NSObject
 
-- (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition;
+- (instancetype)initWithBuffer:(CMSampleBufferRef)capturedBuffer withDevicePosition:(AVCaptureDevicePosition)cameraDevicePosition;
 
 - (uint8_t **)allocateYuvPlanes;
 
