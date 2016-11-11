@@ -1,14 +1,13 @@
 #import <AVFoundation/AVFoundation.h>
+#import "YuvFrame.h"
 
 @interface CapturedFrame : NSObject
 
 - (instancetype)initWithBuffer:(CMSampleBufferRef)capturedBuffer withDevicePosition:(AVCaptureDevicePosition)cameraDevicePosition;
 
-- (uint8_t **)allocateYuvPlanes;
+- (YuvFrame *)allocateYuvFame;
 
-- (void)freeYuvPlanes:(uint8_t **)yuvPlanesArray;
-
-- (void)fillYuvPlanes:(uint8_t **)yuvPlanesArray withPlanesSizes:(NSUInteger *)yuvPlanesSizes;
+- (void)fillYuvFrame:(YuvFrame *)yuvFrame;
 
 - (UIImage *)getRgbImageWithRotation:(UIInterfaceOrientation)cameraOrientation;
 

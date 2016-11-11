@@ -19,50 +19,40 @@
     return self;
 }
 
-- (uint8_t **)allocateYuvPlanes
+- (YuvFrame *)allocateYuvFame
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer, 0);
     
     size_t yPlaneSize = [self yPlaneSize:imageBuffer];
     size_t uvPlaneSize = [self uvPlaneSize:imageBuffer];
-    uint8_t* yuvPlanes[3] = {malloc(yPlaneSize), malloc(uvPlaneSize / 2), malloc(uvPlaneSize / 2)};
+    
+    YuvFrame* yuvFrame = [YuvFrame.alloc initWithYPlaneSize:yPlaneSize uPlaneSize:uvPlaneSize / 2 vPlaneSize:uvPlaneSize / 2];
     
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
-    return yuvPlanes;
+    
+    return yuvFrame;
 }
 
-- (void)freeYuvPlanes:(uint8_t **)yuvPlanesArray
-{
-    free(yuvPlanesArray[0]);
-    free(yuvPlanesArray[1]);
-    free(yuvPlanesArray[2]);
-}
-
-- (void)fillYuvPlanes:(uint8_t **)yuvPlanesArray withPlanesSizes:(NSUInteger *)yuvPlanesSizes
+- (void)fillYuvFrame:(YuvFrame *)yuvFrame
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer, 0);
     
-    size_t yPlaneSize = [self yPlaneSize:imageBuffer];
     void * ySourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-    memcpy(yuvPlanesArray[0], ySourcePlanePointer, yPlaneSize);
+    memcpy(yuvFrame.yPlane, ySourcePlanePointer, yuvFrame.yPlaneSize);
     
-    size_t uvPlaneSize = [self uvPlaneSize:imageBuffer];
     uint8_t* uvSourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
     size_t uDestinationIndex = 0;
     size_t vDestinationIndex = 0;
+    size_t uvPlaneSize = yuvFrame.uPlaneSize + yuvFrame.vPlaneSize;
     for (size_t uvPixelId = 0; uvPixelId < uvPlaneSize; uvPixelId += 2)
     {
-        yuvPlanesArray[1][uDestinationIndex++] = uvSourcePlanePointer[uvPixelId];
-        yuvPlanesArray[2][vDestinationIndex++] = uvSourcePlanePointer[uvPixelId + 1];
+        yuvFrame.uPlane[uDestinationIndex++] = uvSourcePlanePointer[uvPixelId];
+        yuvFrame.vPlane[vDestinationIndex++] = uvSourcePlanePointer[uvPixelId + 1];
     }
     
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
-    
-    yuvPlanesSizes[0] = yPlaneSize;
-    yuvPlanesSizes[1] = uvPlaneSize / 2;
-    yuvPlanesSizes[2] = uvPlaneSize / 2;
 }
 
 - (UIImage *)getRgbImageWithRotation:(UIInterfaceOrientation)cameraOrientation
