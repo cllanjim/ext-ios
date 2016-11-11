@@ -4,53 +4,67 @@
 @implementation CapturedFrame
 {
     CMSampleBufferRef _capturedBuffer;
-    FrameFormat _frameFormat;
     AVCaptureDevicePosition _cameraDevicePosition;
 }
 
-- (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withFrameFormat:(FrameFormat)frameFormat withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition
+# pragma mark - Public
+
+- (instancetype)initWithBuffer:(CMSampleBufferRef)aCapturedBuffer withDevicePosition:(AVCaptureDevicePosition)aCameraDevicePosition
 {
     if (self = [super init])
     {
-        _capturedBuffer = aCapturedBuffer;
-        _frameFormat = frameFormat;
         _cameraDevicePosition = aCameraDevicePosition;
     }
     return self;
 }
 
-- (void)fillYuvFrame:(uint8_t **)yuvDestinationPlanesArray
+- (uint8_t **)allocateYuvPlanes
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer, 0);
     
-    size_t yPlaneWidth = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
-    size_t yPlaneHeight = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
-    unsigned int yPlaneSize = yPlaneWidth * yPlaneHeight;
-    void * ySourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-    memcpy(yuvDestinationPlanesArray[0], ySourcePlanePointer, yPlaneSize);
+    size_t yPlaneSize = [self yPlaneSize:imageBuffer];
+    size_t uvPlaneSize = [self uvPlaneSize:imageBuffer];
+    uint8_t* yuvPlanes[3] = {malloc(yPlaneSize), malloc(uvPlaneSize / 2), malloc(uvPlaneSize / 2)};
     
-    size_t uvPlaneWidth = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 1);
-    size_t uvPlaneHeight = CVPixelBufferGetHeightOfPlane(imageBuffer, 1);
-    size_t uvPlaneSize = uvPlaneWidth * uvPlaneHeight;
+    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+    return yuvPlanes;
+}
+
+- (void)freeYuvPlanes:(uint8_t **)yuvPlanesArray
+{
+    free(yuvPlanesArray[0]);
+    free(yuvPlanesArray[1]);
+    free(yuvPlanesArray[2]);
+}
+
+- (void)fillYuvPlanes:(uint8_t **)yuvPlanesArray withPlanesSizes:(NSUInteger *)yuvPlanesSizes
+{
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
+    CVPixelBufferLockBaseAddress(imageBuffer, 0);
+    
+    size_t yPlaneSize = [self yPlaneSize:imageBuffer];
+    void * ySourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
+    memcpy(yuvPlanesArray[0], ySourcePlanePointer, yPlaneSize);
+    
+    size_t uvPlaneSize = [self uvPlaneSize:imageBuffer];
     uint8_t* uvSourcePlanePointer = CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 1);
-    unsigned int uDestinationIndex = 0;
-    unsigned int vDestinationIndex = 0;
-    for (unsigned int uvPixelId = 0; uvPixelId < uvPlaneSize; uvPixelId += 2)
+    size_t uDestinationIndex = 0;
+    size_t vDestinationIndex = 0;
+    for (size_t uvPixelId = 0; uvPixelId < uvPlaneSize; uvPixelId += 2)
     {
-        yuvDestinationPlanesArray[1][uDestinationIndex++] = uvSourcePlanePointer[uvPixelId];
-        yuvDestinationPlanesArray[2][vDestinationIndex++] = uvSourcePlanePointer[uvPixelId + 1];
+        yuvPlanesArray[1][uDestinationIndex++] = uvSourcePlanePointer[uvPixelId];
+        yuvPlanesArray[2][vDestinationIndex++] = uvSourcePlanePointer[uvPixelId + 1];
     }
     
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
-}
-
-- (void)saveToFile:(NSString *)filePath
-{
     
+    yuvPlanesSizes[0] = yPlaneSize;
+    yuvPlanesSizes[1] = uvPlaneSize / 2;
+    yuvPlanesSizes[2] = uvPlaneSize / 2;
 }
 
-- (UIImage *)getImageWithRotation:(UIInterfaceOrientation)cameraOrientation
+- (UIImage *)getRgbImageWithRotation:(UIInterfaceOrientation)cameraOrientation
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(_capturedBuffer);
     CVPixelBufferLockBaseAddress(imageBuffer, 0);
@@ -104,6 +118,22 @@
         }
     }
     return (image);
+}
+
+#pragma mark - Private
+
+- (size_t)yPlaneSize:(CVImageBufferRef)imageBuffer
+{
+    size_t yPlaneWidth = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
+    size_t yPlaneHeight = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
+    return yPlaneWidth * yPlaneHeight;
+}
+
+- (size_t)uvPlaneSize:(CVImageBufferRef)imageBuffer
+{
+    size_t uvPlaneWidth = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 1);
+    size_t uvPlaneHeight = CVPixelBufferGetHeightOfPlane(imageBuffer, 1);
+    return uvPlaneWidth * uvPlaneHeight;
 }
 
 @end

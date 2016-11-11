@@ -2,6 +2,12 @@
 #import "CapturedFrame.h"
 #import "Extensions.h"
 
+typedef NS_ENUM(NSInteger, FrameFormat)
+{
+    FrameFormatBGRA = 1,
+    FrameFormatYUV = 2
+};
+
 @protocol ExtCameraDelegate
 
 @required

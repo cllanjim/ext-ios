@@ -235,7 +235,6 @@
     return _cameraDevicePosition;
 }
 
-
 - (BOOL)hasTorch
 {
     AVCaptureDevice* videoDevice = self.currentCaptureDevice;
@@ -254,6 +253,14 @@
 }
 
 
+#pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
+{
+    [_delegate frameCaptured:[CapturedFrame.alloc initWithBuffer:sampleBuffer withDevicePosition:_cameraDevicePosition]];
+}
+
+
 #pragma mark - Private
 
 - (AVCaptureDevice *)currentCaptureDevice
@@ -269,11 +276,6 @@
     {
         [captureConnection setVideoOrientation:anOrientation];
     }
-}
-
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
-{
-    [_delegate frameCaptured:[CapturedFrame.alloc initWithBuffer:sampleBuffer withFrameFormat:FrameFormatYUV withDevicePosition:_cameraDevicePosition]];
 }
 
 - (AVCaptureDevice *)deviceWithMediaType:(AVCaptureDevicePosition)position
